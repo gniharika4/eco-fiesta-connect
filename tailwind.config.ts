@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,7 +62,18 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
-				}
+				},
+				// Eco Fiesta Theme Colors
+				eco: {
+					'primary': '#2D6A4F',
+					'secondary': '#40916C',
+					'tertiary': '#52B788',
+					'light': '#D8F3DC',
+					'accent': '#BC6C25',
+					'accent-light': '#F8C78E',
+					'neutral': '#F2F5F5',
+					'dark': '#1B4332',
+				},
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
@@ -84,12 +96,38 @@ export default {
 					to: {
 						height: '0'
 					}
-				}
+				},
+				'fade-in': {
+					'0%': {
+						opacity: '0',
+						transform: 'translateY(10px)'
+					},
+					'100%': {
+						opacity: '1',
+						transform: 'translateY(0)'
+					}
+				},
+				'fade-out': {
+					'0%': {
+						opacity: '1',
+						transform: 'translateY(0)'
+					},
+					'100%': {
+						opacity: '0',
+						transform: 'translateY(10px)'
+					}
+				},
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
-			}
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'fade-in': 'fade-in 0.5s ease-out',
+				'fade-out': 'fade-out 0.5s ease-out'
+			},
+			backgroundImage: {
+				'eco-pattern': "url('/patterns/leaf-pattern.svg')",
+				'hero-pattern': "linear-gradient(rgba(29, 38, 29, 0.7), rgba(29, 38, 29, 0.5)), url('/hero-bg.jpg')",
+			},
 		}
 	},
 	plugins: [require("tailwindcss-animate")],
