@@ -31,9 +31,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     const storedUser = localStorage.getItem('ecoFiestaUser');
     if (storedUser) {
-      const parsedUser = JSON.parse(storedUser);
-      setUser(parsedUser);
-      setUserType(parsedUser.userType);
+      try {
+        const parsedUser = JSON.parse(storedUser);
+        setUser(parsedUser);
+        setUserType(parsedUser.userType);
+      } catch (error) {
+        console.error("Error parsing stored user:", error);
+        localStorage.removeItem('ecoFiestaUser');
+      }
     }
   }, []);
 
@@ -42,7 +47,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // This would be an API call in a real app
     console.log(`Logging in as ${type} with email: ${email}`);
     
-    // Simulate successful login
+    // Simulate successful login after validation
+    if (!email || !password) {
+      throw new Error("Email and password are required");
+    }
+    
     const mockUser = {
       id: `user-${Date.now()}`,
       name: email.split('@')[0],
@@ -60,6 +69,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const register = async (name: string, email: string, password: string, type: UserType) => {
     // This would be an API call in a real app
     console.log(`Registering as ${type}: ${name}, ${email}`);
+    
+    // Validate input
+    if (!name || !email || !password) {
+      throw new Error("All fields are required");
+    }
     
     // Simulate successful registration and login
     const mockUser = {

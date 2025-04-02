@@ -10,16 +10,16 @@ const Header: React.FC = () => {
   const navigate = useNavigate();
 
   return (
-    <header className="bg-white border-b border-border sticky top-0 z-50">
+    <header className="bg-white border-b border-border sticky top-0 z-50 shadow-sm">
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-        <div className="flex items-center gap-2">
+        <div 
+          className="flex items-center gap-2 cursor-pointer"
+          onClick={() => navigate('/')}
+        >
           <div className="w-10 h-10 rounded-full bg-gradient-to-br from-eco-tertiary to-eco-primary flex items-center justify-center">
             <Leaf className="text-white h-5 w-5" />
           </div>
-          <h1 
-            className="text-2xl font-bold text-eco-dark cursor-pointer"
-            onClick={() => navigate('/')}
-          >
+          <h1 className="text-2xl font-bold text-eco-dark">
             Eco<span className="text-eco-primary">Fiesta</span>
           </h1>
         </div>
@@ -27,22 +27,22 @@ const Header: React.FC = () => {
         <nav className="hidden md:flex items-center gap-6">
           {isAuthenticated && (
             <>
-              <a href={`/${userType}/dashboard`} className="text-eco-dark hover:text-eco-primary">Dashboard</a>
+              <a href={`/${userType}/dashboard`} className="text-eco-dark hover:text-eco-primary transition-colors">Dashboard</a>
               {userType === 'customer' && (
                 <>
-                  <a href="/customer/vendors" className="text-eco-dark hover:text-eco-primary">Find Vendors</a>
-                  <a href="/customer/events" className="text-eco-dark hover:text-eco-primary">My Events</a>
+                  <a href="/customer/vendors" className="text-eco-dark hover:text-eco-primary transition-colors">Find Vendors</a>
+                  <a href="/customer/events" className="text-eco-dark hover:text-eco-primary transition-colors">My Events</a>
                 </>
               )}
               {userType === 'vendor' && (
                 <>
-                  <a href="/vendor/bookings" className="text-eco-dark hover:text-eco-primary">Bookings</a>
-                  <a href="/vendor/profile" className="text-eco-dark hover:text-eco-primary">My Services</a>
+                  <a href="/vendor/bookings" className="text-eco-dark hover:text-eco-primary transition-colors">Bookings</a>
+                  <a href="/vendor/profile" className="text-eco-dark hover:text-eco-primary transition-colors">My Services</a>
                 </>
               )}
             </>
           )}
-          <a href="/about" className="text-eco-dark hover:text-eco-primary">About</a>
+          <a href="/about" className="text-eco-dark hover:text-eco-primary transition-colors">About</a>
         </nav>
         
         <div className="flex items-center gap-3">
@@ -50,14 +50,14 @@ const Header: React.FC = () => {
             <div className="flex items-center gap-3">
               <Button
                 variant="ghost"
-                className="text-eco-primary hover:text-eco-dark hover:bg-eco-light"
+                className="text-eco-primary hover:text-eco-dark hover:bg-eco-light transition-colors"
                 onClick={() => navigate(`/${userType}/profile`)}
               >
                 Profile
               </Button>
               <Button 
                 variant="outline"
-                className="border-eco-primary text-eco-primary hover:bg-eco-primary hover:text-white"
+                className="border-eco-primary text-eco-primary hover:bg-eco-primary hover:text-white transition-colors"
                 onClick={logout}
               >
                 Logout
@@ -67,13 +67,13 @@ const Header: React.FC = () => {
             <div className="flex items-center gap-3">
               <Button 
                 variant="ghost"
-                className="text-eco-primary hover:text-eco-dark hover:bg-eco-light"
+                className="text-eco-primary hover:text-eco-dark hover:bg-eco-light transition-colors"
                 onClick={() => navigate('/login')}
               >
                 Login
               </Button>
               <Button 
-                className="bg-eco-primary text-white hover:bg-eco-dark"
+                className="bg-eco-primary text-white hover:bg-eco-dark transition-colors"
                 onClick={() => navigate('/register')}
               >
                 Sign Up

@@ -26,6 +26,7 @@ import { useToast } from "@/components/ui/use-toast";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useAuth } from "@/contexts/AuthContext";
+import { Leaf } from "lucide-react";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address." }),
@@ -53,7 +54,7 @@ const Login = () => {
       await login(values.email, values.password, activeTab);
       toast({
         title: "Login successful",
-        description: `Welcome back! You're now logged in as a ${activeTab === 'customer' ? 'customer' : 'vendor'}.`,
+        description: `Welcome back! You're now logged in as a ${activeTab === 'customer' ? 'event planner' : 'vendor'}.`,
       });
       navigate(`/${activeTab}/dashboard`);
     } catch (error) {
@@ -73,10 +74,13 @@ const Login = () => {
       <Header />
       <main className="flex-grow py-12 bg-eco-light">
         <div className="container mx-auto px-4 max-w-md">
-          <Card className="shadow-lg border-eco-secondary/30">
-            <CardHeader className="space-y-1">
-              <CardTitle className="text-2xl font-bold text-center">Welcome to EcoFiesta</CardTitle>
-              <CardDescription className="text-center">
+          <Card className="shadow-lg border-eco-tertiary/30">
+            <CardHeader className="space-y-1 text-center">
+              <div className="mx-auto w-12 h-12 rounded-full bg-gradient-to-br from-eco-tertiary to-eco-primary flex items-center justify-center">
+                <Leaf className="text-white h-6 w-6" />
+              </div>
+              <CardTitle className="text-2xl font-bold text-eco-dark pt-2">Welcome to EcoFiesta</CardTitle>
+              <CardDescription>
                 Sign in to your account
               </CardDescription>
             </CardHeader>
@@ -124,7 +128,7 @@ const Login = () => {
                         </a>
                       </div>
                       
-                      <Button type="submit" className="w-full bg-eco-primary hover:bg-eco-dark" disabled={isLoading}>
+                      <Button type="submit" className="w-full bg-eco-primary hover:bg-eco-dark transition-colors" disabled={isLoading}>
                         {isLoading ? "Processing..." : "Login as Event Planner"}
                       </Button>
                     </form>
@@ -168,7 +172,7 @@ const Login = () => {
                         </a>
                       </div>
                       
-                      <Button type="submit" className="w-full bg-eco-primary hover:bg-eco-dark" disabled={isLoading}>
+                      <Button type="submit" className="w-full bg-eco-primary hover:bg-eco-dark transition-colors" disabled={isLoading}>
                         {isLoading ? "Processing..." : "Login as Vendor"}
                       </Button>
                     </form>

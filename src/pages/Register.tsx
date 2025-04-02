@@ -15,9 +15,18 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useAuth } from "@/contexts/AuthContext";
+import { Leaf } from "lucide-react";
 
 const formSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters." }),
@@ -30,8 +39,9 @@ const formSchema = z.object({
 });
 
 const Register = () => {
-  const { register: authRegister, userType } = useAuth();
+  const { register: authRegister } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState<'customer' | 'vendor'>('customer');
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -46,24 +56,14 @@ const Register = () => {
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    if (!userType) {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Please select if you're a customer or vendor first.",
-      });
-      navigate("/");
-      return;
-    }
-
     try {
       setIsLoading(true);
-      await authRegister(values.name, values.email, values.password, userType);
+      await authRegister(values.name, values.email, values.password, activeTab);
       toast({
         title: "Account created!",
         description: "You have successfully signed up.",
       });
-      navigate(`/${userType}/dashboard`);
+      navigate(`/${activeTab}/dashboard`);
     } catch (error) {
       console.error("Registration error:", error);
       toast({
@@ -76,105 +76,180 @@ const Register = () => {
     }
   };
 
-  if (!userType) {
-    return (
-      <div className="flex flex-col min-h-screen">
-        <Header />
-        <main className="flex-grow flex items-center justify-center">
-          <div className="text-center">
-            <h1 className="text-2xl font-bold mb-4">Please select a user type</h1>
-            <p className="mb-6">You need to select whether you're a customer or vendor first.</p>
-            <Button onClick={() => navigate("/")}>Go to Home Page</Button>
-          </div>
-        </main>
-        <Footer />
-      </div>
-    );
-  }
-
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
       <main className="flex-grow py-12 bg-eco-light">
         <div className="container mx-auto px-4 max-w-md">
-          <div className="bg-white rounded-xl shadow-lg p-8">
-            <h1 className="text-2xl font-bold mb-6 text-center">
-              Sign Up as {userType === 'customer' ? 'Event Planner' : 'Vendor'}
-            </h1>
-            
-            <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                <FormField
-                  control={form.control}
-                  name="name"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Name</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Enter your name" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+          <Card className="shadow-lg border-eco-tertiary/30">
+            <CardHeader className="space-y-1 text-center">
+              <div className="mx-auto w-12 h-12 rounded-full bg-gradient-to-br from-eco-tertiary to-eco-primary flex items-center justify-center">
+                <Leaf className="text-white h-6 w-6" />
+              </div>
+              <CardTitle className="text-2xl font-bold text-eco-dark pt-2">Create an Account</CardTitle>
+              <CardDescription>
+                Sign up to start planning sustainable events
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Tabs defaultValue="customer" className="mb-6" onValueChange={(value) => setActiveTab(value as 'customer' | 'vendor')}>
+                <TabsList className="grid grid-cols-2 w-full">
+                  <TabsTrigger value="customer">Event Planner</TabsTrigger>
+                  <TabsTrigger value="vendor">Vendor</TabsTrigger>
+                </TabsList>
                 
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Email</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Enter your email" type="email" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                <TabsContent value="customer">
+                  <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 mt-4">
+                      <FormField
+                        control={form.control}
+                        name="name"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Name</FormLabel>
+                            <FormControl>
+                              <Input placeholder="Enter your name" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="email"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Email</FormLabel>
+                            <FormControl>
+                              <Input placeholder="Enter your email" type="email" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="password"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Password</FormLabel>
+                            <FormControl>
+                              <Input placeholder="Create a password" type="password" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="confirmPassword"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Confirm Password</FormLabel>
+                            <FormControl>
+                              <Input placeholder="Confirm your password" type="password" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <Button type="submit" className="w-full bg-eco-primary hover:bg-eco-dark transition-colors" disabled={isLoading}>
+                        {isLoading ? "Processing..." : "Sign Up as Event Planner"}
+                      </Button>
+                      
+                      <div className="text-center mt-4">
+                        <p className="text-sm text-muted-foreground">
+                          Already have an account?{" "}
+                          <a href="/login" className="text-eco-primary hover:text-eco-dark font-medium">
+                            Log in
+                          </a>
+                        </p>
+                      </div>
+                    </form>
+                  </Form>
+                </TabsContent>
                 
-                <FormField
-                  control={form.control}
-                  name="password"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Password</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Create a password" type="password" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
-                <FormField
-                  control={form.control}
-                  name="confirmPassword"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Confirm Password</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Confirm your password" type="password" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
-                <Button type="submit" className="w-full bg-eco-primary hover:bg-eco-dark" disabled={isLoading}>
-                  {isLoading ? "Processing..." : "Sign Up"}
-                </Button>
-                
-                <div className="text-center mt-4">
-                  <p className="text-sm text-muted-foreground">
-                    Already have an account?{" "}
-                    <a href="/login" className="text-eco-primary hover:text-eco-dark font-medium">
-                      Log in
-                    </a>
-                  </p>
-                </div>
-              </form>
-            </Form>
-          </div>
+                <TabsContent value="vendor">
+                  <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 mt-4">
+                      <FormField
+                        control={form.control}
+                        name="name"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Business Name</FormLabel>
+                            <FormControl>
+                              <Input placeholder="Enter your business name" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="email"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Business Email</FormLabel>
+                            <FormControl>
+                              <Input placeholder="Enter your business email" type="email" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="password"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Password</FormLabel>
+                            <FormControl>
+                              <Input placeholder="Create a password" type="password" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="confirmPassword"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Confirm Password</FormLabel>
+                            <FormControl>
+                              <Input placeholder="Confirm your password" type="password" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <Button type="submit" className="w-full bg-eco-primary hover:bg-eco-dark transition-colors" disabled={isLoading}>
+                        {isLoading ? "Processing..." : "Sign Up as Vendor"}
+                      </Button>
+                      
+                      <div className="text-center mt-4">
+                        <p className="text-sm text-muted-foreground">
+                          Already have an account?{" "}
+                          <a href="/login" className="text-eco-primary hover:text-eco-dark font-medium">
+                            Log in
+                          </a>
+                        </p>
+                      </div>
+                    </form>
+                  </Form>
+                </TabsContent>
+              </Tabs>
+            </CardContent>
+          </Card>
         </div>
       </main>
       <Footer />
