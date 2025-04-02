@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -6,6 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useAuth } from "@/contexts/AuthContext";
@@ -73,7 +73,6 @@ const mockServices = [
   },
 ];
 
-// Event history data
 const mockPastEvents = [
   {
     id: "evt1",
@@ -322,14 +321,12 @@ const VendorDashboard = () => {
                 </div>
               </TabsContent>
               
-              {/* Other tab contents similar to the "all" tab but filtered by status */}
               <TabsContent value="pending" className="mt-6">
                 <div className="grid gap-6">
                   {mockBookings
                     .filter(booking => booking.status === 'pending')
                     .map(booking => (
                       <Card key={booking.id} className="overflow-hidden">
-                        {/* Similar content as above, filtered for pending bookings */}
                         <div className="p-6">
                           <div className="flex flex-col md:flex-row justify-between md:items-center mb-4">
                             <div>
