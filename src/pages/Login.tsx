@@ -73,11 +73,11 @@ const Login = () => {
       <Header />
       <main className="flex-grow py-12 bg-eco-light">
         <div className="container mx-auto px-4 max-w-md">
-          <Card className="shadow-lg">
+          <Card className="shadow-lg border-eco-secondary/30">
             <CardHeader className="space-y-1">
-              <CardTitle className="text-2xl font-bold text-center">Log in to EcoFiesta</CardTitle>
+              <CardTitle className="text-2xl font-bold text-center">Welcome to EcoFiesta</CardTitle>
               <CardDescription className="text-center">
-                Choose your account type below
+                Sign in to your account
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -180,7 +180,7 @@ const Login = () => {
                 <p className="text-sm text-muted-foreground">
                   Don't have an account?{" "}
                   <a href="/register" className="text-eco-primary hover:text-eco-dark font-medium">
-                    Register
+                    Sign Up
                   </a>
                 </p>
               </div>

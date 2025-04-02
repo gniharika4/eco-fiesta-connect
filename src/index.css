@@ -5,7 +5,7 @@
 
 @layer base {
   :root {
-    --background: 152 30% 95%;
+    --background: 140 30% 97%;
     --foreground: 157 42% 9%;
 
     --card: 0 0% 100%;
@@ -14,24 +14,24 @@
     --popover: 0 0% 100%;
     --popover-foreground: 157 42% 9%;
 
-    --primary: 152 42% 30%;
+    --primary: 142 42% 35%;
     --primary-foreground: 154 70% 96%;
 
-    --secondary: 151 42% 40%;
-    --secondary-foreground: 154 70% 96%;
+    --secondary: 151 52% 80%;
+    --secondary-foreground: 157 42% 9%;
 
-    --muted: 154 23% 90%;
+    --muted: 154 33% 94%;
     --muted-foreground: 151 20% 35%;
 
-    --accent: 32 67% 44%;
+    --accent: 32 67% 60%;
     --accent-foreground: 154 70% 96%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 154 70% 96%;
 
-    --border: 152 20% 85%;
-    --input: 152 20% 85%;
-    --ring: 152 42% 30%;
+    --border: 152 30% 90%;
+    --input: 152 30% 90%;
+    --ring: 142 42% 35%;
 
     --radius: 0.75rem;
   }
@@ -76,7 +76,7 @@
   }
   
   .eco-btn-secondary {
-    @apply bg-eco-secondary text-white hover:bg-eco-primary rounded-lg px-5 py-2.5 transition-all duration-300 font-medium;
+    @apply bg-eco-secondary text-eco-dark hover:bg-eco-primary hover:text-white rounded-lg px-5 py-2.5 transition-all duration-300 font-medium;
   }
   
   .eco-btn-accent {

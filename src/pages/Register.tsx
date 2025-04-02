@@ -61,14 +61,14 @@ const Register = () => {
       await authRegister(values.name, values.email, values.password, userType);
       toast({
         title: "Account created!",
-        description: "You have successfully registered.",
+        description: "You have successfully signed up.",
       });
       navigate(`/${userType}/dashboard`);
     } catch (error) {
       console.error("Registration error:", error);
       toast({
         variant: "destructive",
-        title: "Registration failed",
+        title: "Sign up failed",
         description: "There was a problem with your registration. Please try again.",
       });
     } finally {
@@ -99,7 +99,7 @@ const Register = () => {
         <div className="container mx-auto px-4 max-w-md">
           <div className="bg-white rounded-xl shadow-lg p-8">
             <h1 className="text-2xl font-bold mb-6 text-center">
-              Register as {userType === 'customer' ? 'Event Planner' : 'Vendor'}
+              Sign Up as {userType === 'customer' ? 'Event Planner' : 'Vendor'}
             </h1>
             
             <Form {...form}>
@@ -161,7 +161,7 @@ const Register = () => {
                 />
                 
                 <Button type="submit" className="w-full bg-eco-primary hover:bg-eco-dark" disabled={isLoading}>
-                  {isLoading ? "Processing..." : "Register"}
+                  {isLoading ? "Processing..." : "Sign Up"}
                 </Button>
                 
                 <div className="text-center mt-4">

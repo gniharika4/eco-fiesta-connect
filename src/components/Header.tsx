@@ -3,6 +3,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import { Button } from "@/components/ui/button";
+import { Leaf } from "lucide-react";
 
 const Header: React.FC = () => {
   const { isAuthenticated, logout, userType } = useAuth();
@@ -12,8 +13,8 @@ const Header: React.FC = () => {
     <header className="bg-white border-b border-border sticky top-0 z-50">
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <div className="w-10 h-10 rounded-full bg-eco-primary flex items-center justify-center">
-            <span className="text-white text-lg font-bold">EF</span>
+          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-eco-tertiary to-eco-primary flex items-center justify-center">
+            <Leaf className="text-white h-5 w-5" />
           </div>
           <h1 
             className="text-2xl font-bold text-eco-dark cursor-pointer"
@@ -75,7 +76,7 @@ const Header: React.FC = () => {
                 className="bg-eco-primary text-white hover:bg-eco-dark"
                 onClick={() => navigate('/register')}
               >
-                Register
+                Sign Up
               </Button>
             </div>
           )}

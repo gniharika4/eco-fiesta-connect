@@ -63,16 +63,16 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				// Eco Fiesta Theme Colors
+				// Eco Fiesta Theme Colors - Updated with softer shades
 				eco: {
-					'primary': '#2D6A4F',
-					'secondary': '#40916C',
-					'tertiary': '#52B788',
-					'light': '#D8F3DC',
-					'accent': '#BC6C25',
-					'accent-light': '#F8C78E',
-					'neutral': '#F2F5F5',
-					'dark': '#1B4332',
+					'primary': '#3B825F',    // Deeper green but still soft
+					'secondary': '#9EDAD1',  // Light teal
+					'tertiary': '#74C69D',   // Medium green
+					'light': '#E8F5E9',      // Very light green
+					'accent': '#F9BC60',     // Soft orange accent
+					'accent-light': '#FFEDD8', // Very light orange
+					'neutral': '#F8FAF8',    // Off-white with green tint
+					'dark': '#1B4332',       // Dark green for text
 				},
 			},
 			borderRadius: {
@@ -126,7 +126,7 @@ export default {
 			},
 			backgroundImage: {
 				'eco-pattern': "url('/patterns/leaf-pattern.svg')",
-				'hero-pattern': "linear-gradient(rgba(29, 38, 29, 0.7), rgba(29, 38, 29, 0.5)), url('/hero-bg.jpg')",
+				'hero-pattern': "linear-gradient(rgba(29, 38, 29, 0.65), rgba(29, 38, 29, 0.45)), url('/hero-bg.jpg')",
 			},
 		}
 	},
