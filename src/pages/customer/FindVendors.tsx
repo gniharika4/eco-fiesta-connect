@@ -16,6 +16,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useAuth } from "@/contexts/AuthContext";
+import { IndianRupee, Star } from "lucide-react";
+import { toast } from "@/hooks/use-toast";
 
 // Sample vendor data
 const mockVendors = [
@@ -25,11 +27,15 @@ const mockVendors = [
     category: "Catering",
     rating: 4.8,
     reviewCount: 124,
-    pricePerHour: 120,
+    pricePerHour: 15000,
     description: "Sustainable catering using locally-sourced organic ingredients with zero-waste packaging.",
-    coverImage: "https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07",
+    coverImage: "https://images.unsplash.com/photo-1555244162-803834f70033",
     sustainabilityBadges: ["Carbon Neutral", "Zero Waste", "Local Sourcing"],
-    location: "New York, NY",
+    location: "Delhi, India",
+    reviews: [
+      { id: "r1", user: "Priya Sharma", rating: 5, comment: "Amazing food and zero waste packaging. Guests loved it!" },
+      { id: "r2", user: "Rajiv Kumar", rating: 4.5, comment: "Great service and eco-friendly approach." }
+    ]
   },
   {
     id: "v2",
@@ -37,11 +43,15 @@ const mockVendors = [
     category: "Decoration",
     rating: 4.9,
     reviewCount: 87,
-    pricePerHour: 95,
+    pricePerHour: 12000,
     description: "Reusable, sustainable event decorations made from recycled and biodegradable materials.",
-    coverImage: "https://images.unsplash.com/photo-1501854140801-50d01698950b",
+    coverImage: "https://images.unsplash.com/photo-1478146059778-26028b07395a",
     sustainabilityBadges: ["Recycled Materials", "Plant-Based"],
-    location: "Brooklyn, NY",
+    location: "Mumbai, India",
+    reviews: [
+      { id: "r3", user: "Anjali Patel", rating: 5, comment: "Beautiful decorations using recycled materials. Creative and sustainable!" },
+      { id: "r4", user: "Vikram Singh", rating: 4.5, comment: "Very unique approach to event decoration with minimal waste." }
+    ]
   },
   {
     id: "v3",
@@ -49,11 +59,15 @@ const mockVendors = [
     category: "Entertainment",
     rating: 4.7,
     reviewCount: 56,
-    pricePerHour: 150,
+    pricePerHour: 18000,
     description: "Solar-powered sound systems and energy-efficient lighting for sustainable events.",
-    coverImage: "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
+    coverImage: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7",
     sustainabilityBadges: ["Renewable Energy", "Carbon Offset"],
-    location: "Queens, NY",
+    location: "Bangalore, India",
+    reviews: [
+      { id: "r5", user: "Arjun Nair", rating: 5, comment: "Solar powered DJ setup was amazing and the sound quality was top-notch." },
+      { id: "r6", user: "Meera Reddy", rating: 4, comment: "Good energy-efficient lighting solutions." }
+    ]
   },
   {
     id: "v4",
@@ -61,12 +75,144 @@ const mockVendors = [
     category: "Waste Management",
     rating: 4.6,
     reviewCount: 42,
-    pricePerHour: 80,
+    pricePerHour: 8000,
     description: "Comprehensive recycling, composting, and waste reduction services for events of all sizes.",
-    coverImage: "https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9",
+    coverImage: "https://images.unsplash.com/photo-1532996122724-e3c354a0b15b",
     sustainabilityBadges: ["Composting", "Recycling", "Zero Landfill"],
-    location: "Manhattan, NY",
+    location: "Hyderabad, India",
+    reviews: [
+      { id: "r7", user: "Kiran Desai", rating: 5, comment: "Perfect waste management with detailed post-event report." },
+      { id: "r8", user: "Tara Joshi", rating: 4, comment: "Very professional segregation and minimal waste to landfill." }
+    ]
   },
+  {
+    id: "v5",
+    name: "Eco Photo Studios",
+    category: "Photography",
+    rating: 4.7,
+    reviewCount: 78,
+    pricePerHour: 12000,
+    description: "Sustainable photography services using energy-efficient equipment and digital delivery options.",
+    coverImage: "https://images.unsplash.com/photo-1554048612-b6a482bc67e5",
+    sustainabilityBadges: ["Digital Only", "Low Energy"],
+    location: "Chennai, India",
+    reviews: [
+      { id: "r9", user: "Aditya Menon", rating: 5, comment: "Brilliant photographer with eco-conscious approach." },
+      { id: "r10", user: "Kavita Iyer", rating: 4.5, comment: "Loved their digital delivery system and beautiful photos!" }
+    ]
+  },
+  {
+    id: "v6",
+    name: "Green Venue Solutions",
+    category: "Venues",
+    rating: 4.8,
+    reviewCount: 103,
+    pricePerHour: 50000,
+    description: "Eco-friendly venues featuring natural lighting, water conservation systems, and native landscaping.",
+    coverImage: "https://images.unsplash.com/photo-1519167758481-83f550bb49b3",
+    sustainabilityBadges: ["Energy Efficient", "Water Conservation", "Green Building"],
+    location: "Pune, India",
+    reviews: [
+      { id: "r11", user: "Rohan Kapoor", rating: 5, comment: "Beautiful sustainable venue with amazing natural lighting." },
+      { id: "r12", user: "Sonia Mehta", rating: 5, comment: "The rainwater harvesting and solar power made us feel good about our choice." }
+    ]
+  },
+  {
+    id: "v7",
+    name: "Green Gift Hampers",
+    category: "Gifts & Favors",
+    rating: 4.9,
+    reviewCount: 65,
+    pricePerHour: 5000, // Base price
+    description: "Eco-friendly gift hampers and party favors made from sustainable materials and locally sourced products.",
+    coverImage: "https://images.unsplash.com/photo-1549465220-1a8b9238cd48",
+    sustainabilityBadges: ["Plastic-Free", "Local Artisans", "Biodegradable"],
+    location: "Jaipur, India",
+    reviews: [
+      { id: "r13", user: "Neha Singhania", rating: 5, comment: "Our guests loved the sustainable gift hampers with local products." },
+      { id: "r14", user: "Rahul Verma", rating: 4.5, comment: "Beautiful packaging and great eco-friendly options." }
+    ]
+  },
+  {
+    id: "v8",
+    name: "EcoTransport Services",
+    category: "Transportation",
+    rating: 4.5,
+    reviewCount: 34,
+    pricePerHour: 10000,
+    description: "Electric and hybrid vehicle fleet for guest transportation with carbon offset programs.",
+    coverImage: "https://images.unsplash.com/photo-1550355291-bbee04a92027",
+    sustainabilityBadges: ["Electric Vehicles", "Carbon Offset", "Shared Rides"],
+    location: "Kolkata, India",
+    reviews: [
+      { id: "r15", user: "Dev Chatterjee", rating: 5, comment: "Professional service with all-electric vehicles." },
+      { id: "r16", user: "Ritu Sen", rating: 4, comment: "Good service and they provide carbon offset certificates." }
+    ]
+  },
+  {
+    id: "v9",
+    name: "Organic Blooms",
+    category: "Flowers & Decor",
+    rating: 4.8,
+    reviewCount: 91,
+    pricePerHour: 7000,
+    description: "Organic and locally grown flower arrangements with plastic-free packaging and setup.",
+    coverImage: "https://images.unsplash.com/photo-1453747063559-36695c8771bd",
+    sustainabilityBadges: ["Organic", "Seasonal", "Compostable"],
+    location: "Ahmedabad, India",
+    reviews: [
+      { id: "r17", user: "Prisha Gupta", rating: 5, comment: "Beautiful local and seasonal flowers with amazing arrangements." },
+      { id: "r18", user: "Samir Desai", rating: 4.5, comment: "Loved their plastic-free approach and the flowers were fresh!" }
+    ]
+  },
+  {
+    id: "v10",
+    name: "Sustainable Sounds DJ",
+    category: "Entertainment",
+    rating: 4.6,
+    reviewCount: 48,
+    pricePerHour: 15000,
+    description: "Energy-efficient DJ setup with solar-powered options for outdoor events.",
+    coverImage: "https://images.unsplash.com/photo-1429962714451-bb934ecdc4ec",
+    sustainabilityBadges: ["Low Energy", "Solar Option"],
+    location: "Goa, India",
+    reviews: [
+      { id: "r19", user: "Karan Malhotra", rating: 4, comment: "Great music selection and energy-efficient setup." },
+      { id: "r20", user: "Leela Prasad", rating: 5, comment: "Amazing DJ who used solar power for our beach wedding!" }
+    ]
+  },
+  {
+    id: "v11",
+    name: "Eco Print Solutions",
+    category: "Stationery",
+    rating: 4.7,
+    reviewCount: 52,
+    pricePerHour: 6000, // Base price
+    description: "Sustainable invitation cards, signage, and event materials using recycled paper and vegetable-based inks.",
+    coverImage: "https://images.unsplash.com/photo-1572781148940-58809aff32c3",
+    sustainabilityBadges: ["Recycled Paper", "Vegetable Inks", "Digital Options"],
+    location: "Lucknow, India",
+    reviews: [
+      { id: "r21", user: "Ananya Sharma", rating: 5, comment: "Beautiful invitations on seed paper that guests could plant!" },
+      { id: "r22", user: "Mohit Agarwal", rating: 4.5, comment: "Great eco-friendly options and the quality was exceptional." }
+    ]
+  },
+  {
+    id: "v12",
+    name: "Green Plate Catering",
+    category: "Catering",
+    rating: 4.8,
+    reviewCount: 110,
+    pricePerHour: 20000,
+    description: "Farm-to-table catering with organic ingredients, vegetarian options, and zero plastic packaging.",
+    coverImage: "https://images.unsplash.com/photo-1565538810643-b5bdb714032a",
+    sustainabilityBadges: ["Organic", "Farm-to-Table", "Vegetarian Options"],
+    location: "Chandigarh, India",
+    reviews: [
+      { id: "r23", user: "Vivek Malhotra", rating: 5, comment: "The organic food was delicious and presentation was beautiful." },
+      { id: "r24", user: "Mira Kapoor", rating: 4, comment: "Great vegetarian options and everyone loved the food." }
+    ]
+  }
 ];
 
 const categories = [
@@ -77,6 +223,10 @@ const categories = [
   { label: "Waste Management", value: "waste" },
   { label: "Venues", value: "venues" },
   { label: "Photography", value: "photography" },
+  { label: "Gifts & Favors", value: "gifts" },
+  { label: "Transportation", value: "transportation" },
+  { label: "Flowers & Decor", value: "flowers" },
+  { label: "Stationery", value: "stationery" }
 ];
 
 const FindVendors = () => {
@@ -85,6 +235,7 @@ const FindVendors = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [sortBy, setSortBy] = useState("recommended");
+  const [showVendorModal, setShowVendorModal] = useState<any>(null);
 
   // Check if user is authenticated as a customer
   if (!isAuthenticated || user?.userType !== 'customer') {
@@ -117,6 +268,15 @@ const FindVendors = () => {
     // Default (recommended) sorting
     return b.rating * b.reviewCount - a.rating * a.reviewCount;
   });
+
+  // Handle booking a vendor
+  const handleBookVendor = (vendor: any) => {
+    // In a real app, this would navigate to a booking page or open a booking modal
+    toast({
+      title: "Booking Request Sent",
+      description: `Your booking request for ${vendor.name} has been sent. They will contact you shortly.`,
+    });
+  };
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -175,18 +335,25 @@ const FindVendors = () => {
 
           {/* Vendor Categories */}
           <Tabs defaultValue="all" className="mb-8">
-            <TabsList className="bg-white">
+            <TabsList className="bg-white mb-6 overflow-x-auto flex-nowrap">
               <TabsTrigger value="all">All</TabsTrigger>
               <TabsTrigger value="catering">Catering</TabsTrigger>
               <TabsTrigger value="decoration">Decoration</TabsTrigger>
               <TabsTrigger value="entertainment">Entertainment</TabsTrigger>
               <TabsTrigger value="waste">Waste Management</TabsTrigger>
+              <TabsTrigger value="venues">Venues</TabsTrigger>
+              <TabsTrigger value="photography">Photography</TabsTrigger>
             </TabsList>
 
             <TabsContent value="all" className="mt-6">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {sortedVendors.map((vendor) => (
-                  <VendorCard key={vendor.id} vendor={vendor} />
+                  <VendorCard 
+                    key={vendor.id} 
+                    vendor={vendor} 
+                    onViewProfile={() => setShowVendorModal(vendor)} 
+                    onBookNow={() => handleBookVendor(vendor)} 
+                  />
                 ))}
               </div>
               {sortedVendors.length === 0 && (
@@ -206,7 +373,12 @@ const FindVendors = () => {
                   {mockVendors
                     .filter((v) => v.category.toLowerCase() === category.value)
                     .map((vendor) => (
-                      <VendorCard key={vendor.id} vendor={vendor} />
+                      <VendorCard 
+                        key={vendor.id} 
+                        vendor={vendor} 
+                        onViewProfile={() => setShowVendorModal(vendor)} 
+                        onBookNow={() => handleBookVendor(vendor)} 
+                      />
                     ))}
                 </div>
               </TabsContent>
@@ -214,15 +386,102 @@ const FindVendors = () => {
           </Tabs>
         </div>
       </main>
+
+      {/* Vendor Details Modal */}
+      {showVendorModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="relative">
+              <img
+                src={showVendorModal.coverImage}
+                alt={showVendorModal.name}
+                className="w-full h-64 object-cover"
+              />
+              <button 
+                className="absolute top-4 right-4 bg-black/50 text-white p-2 rounded-full"
+                onClick={() => setShowVendorModal(null)}
+              >
+                ✕
+              </button>
+              <div className="absolute top-4 left-4">
+                <Badge className="bg-eco-accent text-white">{showVendorModal.category}</Badge>
+              </div>
+            </div>
+            <div className="p-6">
+              <div className="flex justify-between items-start">
+                <div>
+                  <h2 className="text-2xl font-bold">{showVendorModal.name}</h2>
+                  <p className="text-muted-foreground">{showVendorModal.location}</p>
+                </div>
+                <div className="flex items-center bg-eco-light px-3 py-1 rounded-full">
+                  <Star className="h-4 w-4 text-yellow-500 fill-yellow-500 mr-1" />
+                  <span className="font-semibold">{showVendorModal.rating}</span>
+                  <span className="text-muted-foreground text-sm ml-1">({showVendorModal.reviewCount})</span>
+                </div>
+              </div>
+              
+              <div className="mt-4">
+                <h3 className="text-lg font-medium mb-2">About</h3>
+                <p className="text-muted-foreground">{showVendorModal.description}</p>
+              </div>
+              
+              <div className="mt-6">
+                <h3 className="text-lg font-medium mb-2">Sustainability Features</h3>
+                <div className="flex flex-wrap gap-2">
+                  {showVendorModal.sustainabilityBadges.map((badge: string, i: number) => (
+                    <Badge key={i} variant="outline" className="bg-eco-primary/10 text-eco-primary border-eco-primary/20">
+                      {badge}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+              
+              <div className="mt-6 flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-muted-foreground">Starting at</p>
+                  <p className="text-xl font-semibold text-eco-primary flex items-center">
+                    <IndianRupee className="h-4 w-4" /> {showVendorModal.pricePerHour.toLocaleString('en-IN')}/hour
+                  </p>
+                </div>
+                <Button 
+                  className="bg-eco-primary hover:bg-eco-dark"
+                  onClick={() => {
+                    handleBookVendor(showVendorModal);
+                    setShowVendorModal(null);
+                  }}
+                >
+                  Book Now
+                </Button>
+              </div>
+              
+              {/* Reviews Section */}
+              <div className="mt-8 pt-6 border-t">
+                <h3 className="text-lg font-medium mb-4">Customer Reviews</h3>
+                {showVendorModal.reviews?.map((review: any) => (
+                  <div key={review.id} className="mb-4 pb-4 border-b last:border-0 last:pb-0">
+                    <div className="flex justify-between items-center mb-2">
+                      <h4 className="font-medium">{review.user}</h4>
+                      <div className="flex items-center">
+                        <Star className="h-4 w-4 text-yellow-500 fill-yellow-500 mr-1" />
+                        <span>{review.rating}</span>
+                      </div>
+                    </div>
+                    <p className="text-muted-foreground">{review.comment}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      
       <Footer />
     </div>
   );
 };
 
 // Vendor Card Component
-const VendorCard = ({ vendor }: { vendor: any }) => {
-  const navigate = useNavigate();
-
+const VendorCard = ({ vendor, onViewProfile, onBookNow }: { vendor: any, onViewProfile: () => void, onBookNow: () => void }) => {
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-shadow">
       <div className="relative h-48 overflow-hidden">
@@ -239,10 +498,8 @@ const VendorCard = ({ vendor }: { vendor: any }) => {
         <div className="flex justify-between">
           <h3 className="text-xl font-semibold">{vendor.name}</h3>
           <div className="flex items-center">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-yellow-500" viewBox="0 0 20 20" fill="currentColor">
-              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-            </svg>
-            <span className="ml-1 font-semibold">{vendor.rating}</span>
+            <Star className="h-5 w-5 text-yellow-500 fill-yellow-500 mr-1" />
+            <span className="ml-0.5 font-semibold">{vendor.rating}</span>
             <span className="text-muted-foreground text-sm ml-1">({vendor.reviewCount})</span>
           </div>
         </div>
@@ -254,10 +511,12 @@ const VendorCard = ({ vendor }: { vendor: any }) => {
         <div className="flex items-center justify-between mb-4">
           <div>
             <p className="text-xs text-muted-foreground">Starting at</p>
-            <p className="text-lg font-semibold text-eco-primary">${vendor.pricePerHour}/hour</p>
+            <p className="text-lg font-semibold text-eco-primary flex items-center">
+              <IndianRupee className="h-4 w-4" /> {vendor.pricePerHour.toLocaleString('en-IN')}/hour
+            </p>
           </div>
           <div className="flex flex-wrap gap-1">
-            {vendor.sustainabilityBadges.map((badge: string, index: number) => (
+            {vendor.sustainabilityBadges.slice(0, 2).map((badge: string, index: number) => (
               <span 
                 key={index} 
                 className="inline-block px-2 py-1 bg-eco-primary/10 text-eco-primary text-xs rounded-full"
@@ -265,6 +524,11 @@ const VendorCard = ({ vendor }: { vendor: any }) => {
                 {badge}
               </span>
             ))}
+            {vendor.sustainabilityBadges.length > 2 && (
+              <span className="inline-block px-2 py-1 bg-eco-primary/10 text-eco-primary text-xs rounded-full">
+                +{vendor.sustainabilityBadges.length - 2}
+              </span>
+            )}
           </div>
         </div>
         
@@ -272,13 +536,13 @@ const VendorCard = ({ vendor }: { vendor: any }) => {
           <Button 
             variant="outline"
             className="flex-1 border-eco-primary text-eco-primary hover:bg-eco-primary hover:text-white"
-            onClick={() => navigate(`/customer/vendors/${vendor.id}`)}
+            onClick={onViewProfile}
           >
             View Profile
           </Button>
           <Button 
             className="flex-1 bg-eco-primary hover:bg-eco-dark"
-            onClick={() => navigate(`/customer/vendors/${vendor.id}/book`)}
+            onClick={onBookNow}
           >
             Book Now
           </Button>
