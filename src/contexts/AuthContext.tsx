@@ -1,5 +1,5 @@
 
-import React, { createContext, useContext, useState, useEffect } from "react";
+import * as React from "react";
 
 type UserType = 'customer' | 'vendor' | null;
 
@@ -21,14 +21,14 @@ interface AuthContextType {
   setUserType: (type: UserType) => void;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const AuthContext = React.createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [userType, setUserType] = useState<UserType>(null);
+  const [user, setUser] = React.useState<User | null>(null);
+  const [userType, setUserType] = React.useState<UserType>(null);
   
   // Check for existing session on load
-  useEffect(() => {
+  React.useEffect(() => {
     const storedUser = localStorage.getItem('ecoFiestaUser');
     if (storedUser) {
       try {
@@ -111,7 +111,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 };
 
 export const useAuth = () => {
-  const context = useContext(AuthContext);
+  const context = React.useContext(AuthContext);
   if (context === undefined) {
     throw new Error('useAuth must be used within an AuthProvider');
   }
