@@ -18,6 +18,7 @@ import CreateEvent from "./pages/customer/CreateEvent";
 import FindVendors from "./pages/customer/FindVendors";
 import EventDetails from "./pages/customer/EventDetails";
 import RecommendationDetails from "./pages/customer/RecommendationDetails";
+import CustomerEvents from "./pages/customer/CustomerEvents"; // New import
 
 // Vendor Routes
 import VendorDashboard from "./pages/vendor/VendorDashboard";
@@ -50,6 +51,7 @@ const App: React.FC = () => (
             <Route path="/customer/dashboard" element={<CustomerDashboard />} />
             <Route path="/customer/create-event" element={<CreateEvent />} />
             <Route path="/customer/vendors" element={<FindVendors />} />
+            <Route path="/customer/events" element={<CustomerEvents />} />
             <Route path="/customer/events/:id" element={<EventDetails />} />
             <Route path="/customer/events/:id/edit" element={<EventDetails />} />
             <Route path="/customer/recommendations/:id" element={<RecommendationDetails />} />
