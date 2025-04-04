@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useAuth } from "@/contexts/AuthContext";
-import { Check, IndianRupee, Star, X } from "lucide-react";
+import { Check, IndianRupee, Star, X, Award, Download, Leaf, CircleDollarSign, Gift, BadgeCheck } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 
 const mockBookings = [
@@ -133,17 +133,54 @@ const mockPastEvents = [
   }
 ];
 
+// Add seasonal offers and discounts
+const seasonalOffers = [
+  {
+    id: "offer1",
+    title: "Diwali Special",
+    description: "20% off on eco-friendly lighting packages for events during the Diwali season",
+    validUntil: "2023-11-15",
+    discount: 20,
+    code: "ECODIWALI",
+    image: "https://images.unsplash.com/photo-1605810230434-7631ac76ec81"
+  },
+  {
+    id: "offer2",
+    title: "Christmas Green",
+    description: "15% discount on sustainable decor packages using natural materials",
+    validUntil: "2023-12-31",
+    discount: 15,
+    code: "XMASGREEN",
+    image: "https://images.unsplash.com/photo-1512149074996-e923ac45be6d"
+  },
+  {
+    id: "offer3",
+    title: "Summer Wedding Special",
+    description: "Free carbon offset with any wedding package booked for summer months",
+    validUntil: "2023-08-31",
+    discount: 0,
+    isSpecial: true,
+    code: "GREENSUM23",
+    image: "https://images.unsplash.com/photo-1519167758481-83f550bb49b3"
+  },
+];
+
 const VendorDashboard = () => {
   const { user, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("all");
   const [showServiceModal, setShowServiceModal] = useState<any>(null);
   const [showEventModal, setShowEventModal] = useState<any>(null);
+  const [showCertificationModal, setShowCertificationModal] = useState(false);
+  const [showOfferModal, setShowOfferModal] = useState<any>(null);
 
   if (!isAuthenticated || user?.userType !== 'vendor') {
     navigate('/login');
     return null;
   }
+
+  const totalCarbonSaved = mockPastEvents.reduce((acc, event) => acc + event.carbonSaved, 0);
+  const certificationLevel = totalCarbonSaved > 2 ? "Gold" : totalCarbonSaved > 1 ? "Silver" : "Bronze";
 
   const handleAcceptBooking = (bookingId: string) => {
     toast({
@@ -167,6 +204,20 @@ const VendorDashboard = () => {
     navigate('/vendor/services/new');
   };
 
+  const downloadCertificate = () => {
+    toast({
+      title: "Certificate Downloaded",
+      description: "Your sustainability certificate has been downloaded successfully.",
+    });
+  };
+
+  const handleCreateOffer = () => {
+    toast({
+      title: "Offer Created",
+      description: "Your seasonal offer has been published and is now visible to customers.",
+    });
+  };
+
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
@@ -174,18 +225,42 @@ const VendorDashboard = () => {
         <div className="container mx-auto px-4">
           {/* Welcome Section */}
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
-            <div>
-              <h1 className="text-3xl font-bold text-eco-dark">Welcome back, {user?.name || "Vendor"}!</h1>
-              <p className="text-muted-foreground">
-                Manage your services and bookings from your sustainable business dashboard.
-              </p>
+            <div className="flex items-center">
+              {user?.profileImage ? (
+                <div className="h-16 w-16 rounded-full overflow-hidden mr-4">
+                  <img 
+                    src={user.profileImage}
+                    alt={user.name} 
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+              ) : (
+                <div className="h-16 w-16 bg-eco-secondary text-white rounded-full flex items-center justify-center mr-4">
+                  {user?.name?.charAt(0) || "V"}
+                </div>
+              )}
+              <div>
+                <h1 className="text-3xl font-bold text-eco-dark">Welcome back, {user?.name || "Vendor"}!</h1>
+                <p className="text-muted-foreground">
+                  Manage your services and bookings from your sustainable business dashboard.
+                </p>
+              </div>
             </div>
-            <Button 
-              className="bg-eco-primary hover:bg-eco-dark text-white mt-4 md:mt-0"
-              onClick={handleAddService}
-            >
-              Add New Service
-            </Button>
+            <div className="flex flex-col sm:flex-row gap-2 mt-4 md:mt-0">
+              <Button 
+                className="bg-eco-secondary hover:bg-eco-primary text-white flex items-center gap-2"
+                onClick={() => setShowCertificationModal(true)}
+              >
+                <Award size={18} />
+                View Certificate
+              </Button>
+              <Button 
+                className="bg-eco-primary hover:bg-eco-dark text-white"
+                onClick={handleAddService}
+              >
+                Add New Service
+              </Button>
+            </div>
           </div>
 
           {/* Dashboard Overview */}
@@ -237,13 +312,71 @@ const VendorDashboard = () => {
                 <CardTitle className="text-lg font-medium">Carbon Saved</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-bold text-eco-dark">412kg</div>
+                <div className="text-3xl font-bold text-eco-dark flex items-center">
+                  <span>{totalCarbonSaved.toFixed(1)}kg</span>
+                  <Badge className="ml-2 bg-eco-secondary">{certificationLevel}</Badge>
+                </div>
                 <p className="text-sm text-muted-foreground mt-1">
                   Compared to traditional vendors
                 </p>
               </CardContent>
             </Card>
           </div>
+
+          {/* Seasonal Offers Section */}
+          <section className="mb-8">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold text-eco-dark">Seasonal Offers</h2>
+              <Button 
+                variant="outline" 
+                className="border-eco-secondary text-eco-secondary hover:bg-eco-secondary hover:text-white"
+                onClick={() => navigate('/vendor/offers')}
+              >
+                <Gift className="mr-2 h-4 w-4" />
+                Create New Offer
+              </Button>
+            </div>
+            
+            <div className="grid md:grid-cols-3 gap-6">
+              {seasonalOffers.map(offer => (
+                <Card key={offer.id} className="overflow-hidden hover:shadow-lg transition-shadow">
+                  <div className="h-36 overflow-hidden">
+                    <img
+                      src={offer.image}
+                      alt={offer.title}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <CardHeader className="pb-2">
+                    <div className="flex justify-between items-start">
+                      <CardTitle>{offer.title}</CardTitle>
+                      {offer.discount > 0 && (
+                        <Badge className="bg-eco-primary">{offer.discount}% OFF</Badge>
+                      )}
+                      {offer.isSpecial && (
+                        <Badge className="bg-eco-secondary">SPECIAL</Badge>
+                      )}
+                    </div>
+                    <CardDescription>Valid until: {new Date(offer.validUntil).toLocaleDateString('en-IN')}</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground mb-4">{offer.description}</p>
+                    <div className="flex items-center justify-between">
+                      <div className="bg-muted px-3 py-1 rounded text-sm font-mono">{offer.code}</div>
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="text-eco-primary border-eco-primary hover:bg-eco-primary hover:text-white"
+                        onClick={() => setShowOfferModal(offer)}
+                      >
+                        Edit Offer
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </section>
 
           {/* Bookings Tab */}
           <section className="mb-8">
@@ -581,7 +714,7 @@ const VendorDashboard = () => {
               <CardContent className="pt-6">
                 <div className="grid md:grid-cols-4 gap-6 text-center">
                   <div>
-                    <div className="text-4xl font-bold text-eco-primary mb-2">412kg</div>
+                    <div className="text-4xl font-bold text-eco-primary mb-2">{(totalCarbonSaved * 100).toFixed(0)}kg</div>
                     <p className="text-sm text-muted-foreground">CO2 Emissions Saved</p>
                   </div>
                   <div>
@@ -593,7 +726,7 @@ const VendorDashboard = () => {
                     <p className="text-sm text-muted-foreground">Local Material Sources</p>
                   </div>
                   <div>
-                    <div className="text-4xl font-bold text-eco-primary mb-2">24</div>
+                    <div className="text-4xl font-bold text-eco-primary mb-2">{mockPastEvents.length}</div>
                     <p className="text-sm text-muted-foreground">Eco-Friendly Events</p>
                   </div>
                 </div>
@@ -601,13 +734,30 @@ const VendorDashboard = () => {
                   <h4 className="font-semibold mb-2">Eco Certification Status:</h4>
                   <div className="flex items-center">
                     <div className="w-full bg-white rounded-full h-2.5">
-                      <div className="bg-eco-primary h-2.5 rounded-full" style={{ width: '70%' }}></div>
+                      <div 
+                        className="bg-eco-primary h-2.5 rounded-full" 
+                        style={{ width: certificationLevel === 'Gold' ? '100%' : certificationLevel === 'Silver' ? '70%' : '40%' }}
+                      ></div>
                     </div>
-                    <span className="text-sm font-medium text-eco-primary ml-4">70%</span>
+                    <span 
+                      className="text-sm font-medium text-eco-primary ml-4"
+                    >
+                      {certificationLevel === 'Gold' ? '100%' : certificationLevel === 'Silver' ? '70%' : '40%'}
+                    </span>
                   </div>
                   <p className="text-sm mt-2 text-muted-foreground">
-                    Complete 2 more sustainability criteria to achieve Gold Certification.
-                    <a href="#" className="text-eco-primary font-medium ml-1">View Details</a>
+                    {certificationLevel !== 'Gold' ? (
+                      <>Complete more sustainable events to achieve {certificationLevel === 'Bronze' ? 'Silver' : 'Gold'} Certification.</>
+                    ) : (
+                      <>You have achieved Gold Certification! Keep up the great work.</>
+                    )}
+                    <Button 
+                      variant="link" 
+                      className="text-eco-primary font-medium ml-1 p-0 h-auto"
+                      onClick={() => setShowCertificationModal(true)}
+                    >
+                      View Details
+                    </Button>
                   </p>
                 </div>
               </CardContent>
@@ -617,232 +767,4 @@ const VendorDashboard = () => {
       </main>
       
       {/* Service Edit Dialog */}
-      <Dialog open={!!showServiceModal} onOpenChange={() => setShowServiceModal(null)}>
-        <DialogContent className="max-w-3xl">
-          <DialogHeader>
-            <DialogTitle>Edit Service</DialogTitle>
-            <DialogDescription>
-              Update your service details to attract more eco-conscious customers.
-            </DialogDescription>
-          </DialogHeader>
-          
-          {showServiceModal && (
-            <div className="py-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <h3 className="font-medium mb-2">Service Information</h3>
-                  <div className="space-y-4">
-                    <div>
-                      <label className="text-sm font-medium mb-1 block">Service Name</label>
-                      <Input defaultValue={showServiceModal.name} />
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium mb-1 block">Category</label>
-                      <Select defaultValue={showServiceModal.type.toLowerCase()}>
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="catering">Catering</SelectItem>
-                          <SelectItem value="decoration">Decoration</SelectItem>
-                          <SelectItem value="entertainment">Entertainment</SelectItem>
-                          <SelectItem value="waste">Waste Management</SelectItem>
-                          <SelectItem value="venues">Venues</SelectItem>
-                          <SelectItem value="photography">Photography</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium mb-1 block">Base Price (₹)</label>
-                      <Input type="number" defaultValue={showServiceModal.basePrice.toString()} />
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium mb-1 block">Price Unit</label>
-                      <Select defaultValue={showServiceModal.priceUnit}>
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="per person">Per Person</SelectItem>
-                          <SelectItem value="per event">Per Event</SelectItem>
-                          <SelectItem value="per hour">Per Hour</SelectItem>
-                          <SelectItem value="per day">Per Day</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-                </div>
-                
-                <div>
-                  <h3 className="font-medium mb-2">Description & Images</h3>
-                  <div className="space-y-4">
-                    <div>
-                      <label className="text-sm font-medium mb-1 block">Description</label>
-                      <textarea 
-                        className="w-full min-h-[100px] border rounded-md p-2" 
-                        defaultValue={showServiceModal.description}
-                      />
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium mb-1 block">Service Images</label>
-                      <div className="grid grid-cols-2 gap-2">
-                        {showServiceModal.images?.map((img: string, idx: number) => (
-                          <div key={idx} className="relative h-24 rounded overflow-hidden">
-                            <img src={img} alt={`Service ${idx+1}`} className="w-full h-full object-cover" />
-                            <button 
-                              className="absolute top-1 right-1 bg-black/50 text-white rounded-full p-1"
-                              aria-label="Remove image"
-                            >
-                              <X className="h-3 w-3" />
-                            </button>
-                          </div>
-                        ))}
-                        <div className="h-24 border-2 border-dashed rounded flex items-center justify-center bg-muted/50 cursor-pointer">
-                          <span className="text-sm text-muted-foreground">Add Image</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="mt-6 flex justify-end gap-2">
-                <Button variant="outline" onClick={() => setShowServiceModal(null)}>Cancel</Button>
-                <Button 
-                  className="bg-eco-primary hover:bg-eco-dark"
-                  onClick={() => {
-                    toast({
-                      title: "Service Updated",
-                      description: "Your service has been successfully updated.",
-                    });
-                    setShowServiceModal(null);
-                  }}
-                >
-                  Save Changes
-                </Button>
-              </div>
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
-      
-      {/* Event Details Dialog */}
-      <Dialog open={!!showEventModal} onOpenChange={() => setShowEventModal(null)}>
-        <DialogContent className="max-w-4xl">
-          {showEventModal && (
-            <>
-              <DialogHeader>
-                <DialogTitle>{showEventModal.title}</DialogTitle>
-                <DialogDescription>
-                  {new Date(showEventModal.date).toLocaleDateString('en-IN')} • {showEventModal.location}
-                </DialogDescription>
-              </DialogHeader>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
-                <div>
-                  <div className="rounded-lg overflow-hidden h-52">
-                    <img 
-                      src={showEventModal.images[0]} 
-                      alt={showEventModal.title} 
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  
-                  <div className="mt-4 grid grid-cols-3 gap-2">
-                    {showEventModal.images.slice(1).map((img: string, idx: number) => (
-                      <div key={idx} className="h-20 rounded-md overflow-hidden">
-                        <img src={img} alt={`Event ${idx+1}`} className="w-full h-full object-cover" />
-                      </div>
-                    ))}
-                  </div>
-                  
-                  <div className="mt-4">
-                    <h3 className="font-medium mb-2">Event Description</h3>
-                    <p className="text-muted-foreground">
-                      {showEventModal.description}
-                    </p>
-                  </div>
-                </div>
-                
-                <div>
-                  <div className="grid grid-cols-2 gap-4 mb-6">
-                    <div className="bg-muted/50 p-4 rounded-lg">
-                      <p className="text-sm text-muted-foreground">Client</p>
-                      <p className="font-medium">{showEventModal.clientName}</p>
-                    </div>
-                    <div className="bg-muted/50 p-4 rounded-lg">
-                      <p className="text-sm text-muted-foreground">Event Type</p>
-                      <p className="font-medium">{showEventModal.type}</p>
-                    </div>
-                    <div className="bg-muted/50 p-4 rounded-lg">
-                      <p className="text-sm text-muted-foreground">Budget</p>
-                      <p className="font-medium flex items-center">
-                        <IndianRupee className="h-4 w-4" />
-                        {showEventModal.budget.toLocaleString('en-IN')}
-                      </p>
-                    </div>
-                    <div className="bg-muted/50 p-4 rounded-lg">
-                      <p className="text-sm text-muted-foreground">Carbon Saved</p>
-                      <p className="font-medium text-eco-primary">{showEventModal.carbonSaved} tons</p>
-                    </div>
-                  </div>
-                  
-                  <div className="mb-6">
-                    <h3 className="font-medium mb-3">Client Reviews</h3>
-                    {showEventModal.reviews.map((review: any) => (
-                      <div key={review.id} className="bg-muted/30 p-4 rounded-lg mb-2">
-                        <div className="flex justify-between mb-1">
-                          <p className="font-medium">{review.user}</p>
-                          <div className="flex items-center">
-                            <span className="mr-1">{review.rating}</span>
-                            <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" />
-                          </div>
-                        </div>
-                        <p className="text-sm text-muted-foreground">{review.text}</p>
-                      </div>
-                    ))}
-                  </div>
-                  
-                  <div>
-                    <h3 className="font-medium mb-2">Sustainability Highlights</h3>
-                    <ul className="space-y-2">
-                      <li className="flex items-center">
-                        <Check className="h-5 w-5 text-green-500 mr-2" />
-                        <span>Reduced carbon footprint by {showEventModal.carbonSaved} tons</span>
-                      </li>
-                      <li className="flex items-center">
-                        <Check className="h-5 w-5 text-green-500 mr-2" />
-                        <span>Used locally sourced materials and products</span>
-                      </li>
-                      <li className="flex items-center">
-                        <Check className="h-5 w-5 text-green-500 mr-2" />
-                        <span>Zero waste event management</span>
-                      </li>
-                      <li className="flex items-center">
-                        <Check className="h-5 w-5 text-green-500 mr-2" />
-                        <span>Digital-first approach to reduce paper waste</span>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </>
-          )}
-        </DialogContent>
-      </Dialog>
-      
-      <Footer />
-    </div>
-  );
-};
-
-const Input = ({ ...props }) => {
-  return (
-    <input
-      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-      {...props}
-    />
-  );
-};
-
-export default VendorDashboard;
+      <Dialog

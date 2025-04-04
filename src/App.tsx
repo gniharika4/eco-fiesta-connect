@@ -21,6 +21,7 @@ import RecommendationDetails from "./pages/customer/RecommendationDetails";
 
 // Vendor Routes
 import VendorDashboard from "./pages/vendor/VendorDashboard";
+import ManageOffers from "./pages/vendor/ManageOffers";
 
 // Create a client
 const queryClient = new QueryClient({
@@ -55,6 +56,7 @@ const App: React.FC = () => (
             
             {/* Vendor Routes */}
             <Route path="/vendor/dashboard" element={<VendorDashboard />} />
+            <Route path="/vendor/offers" element={<ManageOffers />} />
             
             {/* Catch-all Route */}
             <Route path="*" element={<NotFound />} />
