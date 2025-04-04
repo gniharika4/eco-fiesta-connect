@@ -18,11 +18,14 @@ import CreateEvent from "./pages/customer/CreateEvent";
 import FindVendors from "./pages/customer/FindVendors";
 import EventDetails from "./pages/customer/EventDetails";
 import RecommendationDetails from "./pages/customer/RecommendationDetails";
-import CustomerEvents from "./pages/customer/CustomerEvents"; // New import
+import CustomerEvents from "./pages/customer/CustomerEvents";
 
 // Vendor Routes
 import VendorDashboard from "./pages/vendor/VendorDashboard";
 import ManageOffers from "./pages/vendor/ManageOffers";
+import VendorServices from "./pages/vendor/VendorServices";
+import AddEditService from "./pages/vendor/AddEditService";
+import VendorBookings from "./pages/vendor/VendorBookings";
 
 // Create a client
 const queryClient = new QueryClient({
@@ -59,6 +62,10 @@ const App: React.FC = () => (
             {/* Vendor Routes */}
             <Route path="/vendor/dashboard" element={<VendorDashboard />} />
             <Route path="/vendor/offers" element={<ManageOffers />} />
+            <Route path="/vendor/services" element={<VendorServices />} />
+            <Route path="/vendor/services/new" element={<AddEditService />} />
+            <Route path="/vendor/services/:id" element={<AddEditService />} />
+            <Route path="/vendor/bookings" element={<VendorBookings />} />
             
             {/* Catch-all Route */}
             <Route path="*" element={<NotFound />} />

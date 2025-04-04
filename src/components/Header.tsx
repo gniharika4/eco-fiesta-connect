@@ -38,6 +38,7 @@ const Header: React.FC = () => {
                 <>
                   <Link to="/vendor/bookings" className="text-eco-dark hover:text-eco-primary transition-colors">Bookings</Link>
                   <Link to="/vendor/services" className="text-eco-dark hover:text-eco-primary transition-colors">My Services</Link>
+                  <Link to="/vendor/offers" className="text-eco-dark hover:text-eco-primary transition-colors">Offers</Link>
                 </>
               )}
             </>
@@ -55,11 +56,17 @@ const Header: React.FC = () => {
                       src={user.profileImage}
                       alt={user.name} 
                       className="h-full w-full object-cover"
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.src = userType === 'vendor' 
+                          ? '/avatars/vendor-avatar.jpg' 
+                          : '/avatars/customer-avatar.jpg';
+                      }}
                     />
                   </div>
                 ) : (
                   <div className="h-8 w-8 bg-eco-secondary text-white rounded-full flex items-center justify-center mr-2">
-                    {user?.name?.charAt(0) || "U"}
+                    {user?.name?.charAt(0) || (userType === 'vendor' ? "V" : "C")}
                   </div>
                 )}
                 <span className="text-sm font-medium hidden lg:inline">{user?.name}</span>
