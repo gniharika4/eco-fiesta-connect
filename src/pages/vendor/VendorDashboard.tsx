@@ -1,10 +1,11 @@
+
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -767,4 +768,205 @@ const VendorDashboard = () => {
       </main>
       
       {/* Service Edit Dialog */}
-      <Dialog
+      <Dialog open={!!showServiceModal} onOpenChange={() => setShowServiceModal(null)}>
+        <DialogContent className="max-w-xl">
+          <DialogHeader>
+            <DialogTitle>Edit Service</DialogTitle>
+            <DialogDescription>
+              Update the details of your service.
+            </DialogDescription>
+          </DialogHeader>
+          {showServiceModal && (
+            <div className="grid gap-4 py-4">
+              <div className="grid grid-cols-4 items-center gap-4">
+                <div className="col-span-4">
+                  <h3 className="font-medium">{showServiceModal.name}</h3>
+                  <p className="text-sm text-muted-foreground">{showServiceModal.type}</p>
+                </div>
+                <div className="col-span-4">
+                  <p className="text-sm">{showServiceModal.description}</p>
+                </div>
+              </div>
+            </div>
+          )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowServiceModal(null)}>Cancel</Button>
+            <Button>Save Changes</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Event Details Dialog */}
+      <Dialog open={!!showEventModal} onOpenChange={() => setShowEventModal(null)}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Event Details</DialogTitle>
+          </DialogHeader>
+          {showEventModal && (
+            <div className="grid gap-4">
+              <div className="aspect-video relative overflow-hidden rounded-lg">
+                <img 
+                  src={showEventModal.images[0]} 
+                  alt={showEventModal.title} 
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div>
+                <h2 className="text-xl font-bold">{showEventModal.title}</h2>
+                <div className="flex items-center gap-2 mt-1">
+                  <Badge className="bg-eco-secondary">{showEventModal.type}</Badge>
+                  <p className="text-sm text-muted-foreground">
+                    {new Date(showEventModal.date).toLocaleDateString('en-IN')} • {showEventModal.location}
+                  </p>
+                </div>
+              </div>
+              <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <h3 className="font-medium">Client</h3>
+                  <p className="text-sm">{showEventModal.clientName}</p>
+                </div>
+                <div>
+                  <h3 className="font-medium">Budget</h3>
+                  <p className="flex items-center text-sm"><IndianRupee className="h-3.5 w-3.5 mr-1" />{showEventModal.budget.toLocaleString('en-IN')}</p>
+                </div>
+              </div>
+              <div>
+                <h3 className="font-medium">Description</h3>
+                <p className="text-sm">{showEventModal.description}</p>
+              </div>
+              <div>
+                <h3 className="font-medium">Reviews</h3>
+                {showEventModal.reviews.map((review: any) => (
+                  <div key={review.id} className="mt-2 p-3 bg-muted/50 rounded-lg">
+                    <div className="flex items-center justify-between">
+                      <p className="font-medium">{review.user}</p>
+                      <div className="flex items-center">
+                        <span className="font-medium mr-1">{review.rating}</span>
+                        <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" />
+                      </div>
+                    </div>
+                    <p className="text-sm mt-1">{review.text}</p>
+                  </div>
+                ))}
+              </div>
+              <div>
+                <h3 className="font-medium">Environmental Impact</h3>
+                <div className="flex items-center mt-1">
+                  <Leaf className="h-4 w-4 mr-1 text-eco-primary" />
+                  <p className="text-sm">
+                    <span className="font-medium">{showEventModal.carbonSaved} tons</span> of carbon emissions saved compared to traditional methods
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowEventModal(null)}>Close</Button>
+            <Button className="bg-eco-primary">Download Report</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Certification Modal */}
+      <Dialog open={showCertificationModal} onOpenChange={setShowCertificationModal}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="text-center text-2xl">Sustainability Certificate</DialogTitle>
+          </DialogHeader>
+          
+          <div className="border-8 border-double border-eco-secondary p-8 bg-white">
+            <div className="text-center">
+              <h1 className="text-3xl font-serif mb-6">Certificate of Excellence in</h1>
+              <h1 className="text-4xl font-bold text-eco-primary mb-8">Sustainable Event Planning</h1>
+              
+              <p className="mb-8 text-lg">This certifies that</p>
+              <p className="text-2xl font-bold mb-8">{user?.name || "Vendor Name"}</p>
+              
+              <p className="mb-8 text-lg">has achieved</p>
+              <div className="flex items-center justify-center mb-8">
+                <Badge className="text-xl py-2 px-4 bg-eco-secondary">{certificationLevel} Level</Badge>
+              </div>
+              
+              <p className="mb-8 text-lg">
+                for demonstrating exceptional commitment to sustainability practices,
+                <br />saving approximately <span className="font-bold">{(totalCarbonSaved * 100).toFixed(0)} kg</span> of carbon emissions,
+                <br />and promoting eco-friendly event solutions.
+              </p>
+              
+              <div className="flex justify-between items-center mb-8">
+                <div className="text-left">
+                  <p className="font-medium">Issue Date:</p>
+                  <p>{new Date().toLocaleDateString('en-IN')}</p>
+                </div>
+                <div>
+                  <BadgeCheck className="w-16 h-16 text-eco-primary" />
+                </div>
+                <div className="text-right">
+                  <p className="font-medium">Valid Until:</p>
+                  <p>{new Date(Date.now() + 365*24*60*60*1000).toLocaleDateString('en-IN')}</p>
+                </div>
+              </div>
+              
+              <p className="text-sm text-muted-foreground">
+                Certificate ID: ECO-{Math.floor(Math.random() * 10000).toString().padStart(4, '0')}
+              </p>
+            </div>
+          </div>
+          
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowCertificationModal(false)}>Close</Button>
+            <Button 
+              className="bg-eco-primary flex items-center gap-2"
+              onClick={downloadCertificate}
+            >
+              <Download className="h-4 w-4" />
+              Download Certificate
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Offer Modal */}
+      <Dialog open={!!showOfferModal} onOpenChange={() => setShowOfferModal(null)}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle>Edit Offer</DialogTitle>
+          </DialogHeader>
+          {showOfferModal && (
+            <div className="grid gap-4">
+              <div className="h-36 overflow-hidden rounded-lg">
+                <img
+                  src={showOfferModal.image}
+                  alt={showOfferModal.title}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div>
+                <h2 className="font-bold">{showOfferModal.title}</h2>
+                <p className="text-sm text-muted-foreground">
+                  Valid until: {new Date(showOfferModal.validUntil).toLocaleDateString('en-IN')}
+                </p>
+              </div>
+              <div>
+                <h3 className="font-medium">Discount Code</h3>
+                <div className="bg-muted px-3 py-1 rounded text-sm font-mono mt-1">{showOfferModal.code}</div>
+              </div>
+              <div>
+                <h3 className="font-medium">Description</h3>
+                <p className="text-sm mt-1">{showOfferModal.description}</p>
+              </div>
+            </div>
+          )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowOfferModal(null)}>Cancel</Button>
+            <Button className="bg-eco-primary" onClick={handleCreateOffer}>Update Offer</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Footer />
+    </div>
+  );
+};
+
+export default VendorDashboard;
