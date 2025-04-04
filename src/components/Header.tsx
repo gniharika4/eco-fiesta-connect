@@ -4,6 +4,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Leaf } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const Header: React.FC = () => {
   const { isAuthenticated, logout, userType, user } = useAuth();
@@ -50,25 +51,15 @@ const Header: React.FC = () => {
           {isAuthenticated ? (
             <div className="flex items-center gap-3">
               <div className="flex items-center">
-                {user?.profileImage ? (
-                  <div className="h-8 w-8 rounded-full overflow-hidden mr-2">
-                    <img 
-                      src={user.profileImage}
-                      alt={user.name} 
-                      className="h-full w-full object-cover"
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement;
-                        target.src = userType === 'vendor' 
-                          ? '/avatars/vendor-avatar.jpg' 
-                          : '/avatars/customer-avatar.jpg';
-                      }}
-                    />
-                  </div>
-                ) : (
-                  <div className="h-8 w-8 bg-eco-secondary text-white rounded-full flex items-center justify-center mr-2">
+                <Avatar className="h-8 w-8 mr-2">
+                  <AvatarImage 
+                    src={user?.profileImage} 
+                    alt={user?.name || "User"} 
+                  />
+                  <AvatarFallback className="bg-eco-secondary text-white">
                     {user?.name?.charAt(0) || (userType === 'vendor' ? "V" : "C")}
-                  </div>
-                )}
+                  </AvatarFallback>
+                </Avatar>
                 <span className="text-sm font-medium hidden lg:inline">{user?.name}</span>
               </div>
               <Button 

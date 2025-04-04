@@ -11,6 +11,7 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import About from "./pages/About";
 
 // Customer Routes
 import CustomerDashboard from "./pages/customer/CustomerDashboard";
@@ -49,6 +50,7 @@ const App: React.FC = () => (
             <Route path="/" element={<Index />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/about" element={<About />} />
             
             {/* Customer Routes */}
             <Route path="/customer/dashboard" element={<CustomerDashboard />} />
